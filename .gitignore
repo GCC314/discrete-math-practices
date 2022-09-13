@@ -2,3 +2,4 @@
 __pycache__/
 tst.py
 parsetab.py
+*.in
