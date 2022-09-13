@@ -9,16 +9,17 @@ def binStringify(val,n):
 
 if __name__ == "__main__":
     exp = input("Please input an expression: ")
-    lcalc.Init(exp)
-    varList = lcalc.Parse()
 
+    varList = sorted(lcalc.Parse(exp))
     if(len(varList) != 0):
         print("The expression got %d variable(s): " % (len(varList), ), varList)
     else:
         print("The expression got no variable.")
     
+    ast = lcalc.Generate_AST(exp)
+
     if(len(varList) == 0):
-        print("The expression always equals to ", lcalc.Eval({}))
+        print("The expression always equals to", lcalc.Eval_AST(ast, {}))
     else:
         # Print truth table
         print("\n #### Truth Table ####")
@@ -27,10 +28,10 @@ if __name__ == "__main__":
         for bins in range(2 ** len(varList)):
             varDict = {}
             for i in range(len(varList)):
-                varDict[varList[i]] = str((bins >> i) & 1)
-            res = lcalc.Eval(varDict)
+                varDict[varList[i]] = (bins >> i) & 1
+            res = lcalc.Eval_AST(ast, varDict)
             print(binStringify(bins, len(varList)) + "\t" + str(res))
-            if(res == '1'):
+            if(res == 1):
                 satisfyAssigns.append(bins)
         # Print satisfying assignments
         print("\n #### Satisfying Assignments")
